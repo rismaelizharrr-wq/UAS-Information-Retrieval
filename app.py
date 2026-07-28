@@ -1,26 +1,25 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(page_title="Book Search", layout="wide")
+st.set_page_config(page_title="Book Scraping", page_icon="📚")
 
+st.title("📚 Hasil Web Scraping Buku")
+
+# Membaca data
 df = pd.read_csv("books.csv")
 
-st.title("📚 Book Search (Scraped via Scrapy)")
+st.success(f"Jumlah data: {len(df)} buku")
 
-query = st.text_input("Cari...")
+# Pencarian buku
+st.subheader("🔎 Cari Buku")
 
-if query:
-    hasil = df[df["title"].str.contains(query, case=False, na=False)]
+keyword = st.text_input("Masukkan judul buku")
+
+if keyword:
+    hasil = df[df["title"].str.contains(keyword, case=False, na=False)]
+
+    st.write(f"Ditemukan {len(hasil)} buku")
+
+    st.dataframe(hasil)
 else:
-    hasil = df
-
-st.markdown(f"## ✨ Ditemukan {len(hasil)} hasil")
-
-for _, row in hasil.iterrows():
-    st.markdown(f"### [{row['title']}]({row['link']})")
-    st.write(
-        f"**Price:** {row['price']} | "
-        f"**Rating:** {row['rating']} | "
-        f"**Availability:** {row['availability']}"
-    )
-    st.divider()
+    st.dataframe(df)
